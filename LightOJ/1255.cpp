@@ -2,32 +2,38 @@
 
 #include<bits/stdc++.h>
 using namespace std;
-#define MAX 10000
+#define MAX 1000000
 
-int table[MAX][MAX],kase=0,cnt;
+int table[MAX][100],kase=0,cnt;
 
 void makeDFA(string pattern)
 {
+
+
     int lps = 0;
     for(int i = 1; i<=pattern.size(); i++)
     {
-        for(int j=0; j<MAX; j++)
+        for(int j=0; j<30; j++)
         {
             table[i][j] = table[lps][j];
         }
         table[i][pattern[i]-97] = i+1;
-        if(i!=pattern.size())
+        if(i<pattern.size())
             lps = table[lps][pattern[i]-97];
     }
 
-    /*for(int i=0; i<=pattern.size(); i++){
-    for(int j=0; j<MAX; j++){
+   /* for(int i=0; i<=pattern.size(); i++){
+    for(int j=0; j<30; j++){
         cout<<table[i][j]<<" ";}cout<<endl;}*/
 
 }
 
 void searchPattern(string text,string pattern)
 {
+    for(int i=0;i<MAX; i++)
+        for(int j=0; j<100; j++)
+            table[i][j]=0;
+
     int j=0;
     table[0][pattern[0]-97] = 1;
    //cout<< pattern[0]-97<<endl;
