@@ -23,7 +23,7 @@ Point nextToTop()
     return res;
 }
 
-long long dist(Point P,Point Q)
+ll dist(Point P,Point Q)
 {
     return (P.x-Q.x)*(P.x-Q.x)+(P.y-Q.y)*(P.y-Q.y) ;
 }
@@ -34,40 +34,40 @@ double calc(Point A,Point B,Point C)
     double b = sqrt((double)dist(B,C));
     double c = sqrt((double)dist(C,A));
 
-    return acos((b*b-c*c-a*a)/(-2*a*c));
+    //return acos((b*b-c*c-a*a)/(-2*a*c));
+    return acos((a*a+c*c-b*b)/(2*a*c));
 }
 
 int orientation(Point P,Point Q,Point R)
 {
-    long long ret = (Q.y-P.y)*(R.x-Q.x) - (Q.x-P.x)*(R.y-Q.y) ;
-    if(ret<0) return 2;
-    if(ret>0) return 1;
-    return ret ;
+    ll result = (Q.y-P.y)*(R.x-Q.x) - (Q.x-P.x)*(R.y-Q.y) ;
+    if(result<0) return 2;
+    if(result>0) return 1;
+    return result ;
 }
 
 bool cmp(Point X , Point Y)
 {
-    ll ret = orientation(a[0],X,Y);
-    if(ret==0)
+    ll result = orientation(a[0],X,Y);
+    if(result==0)
     {
-        long long dist1 = dist(a[0],X);
-        long long dist2 = dist(a[0],Y);
+        ll dist1 = dist(a[0],X);
+        ll dist2 = dist(a[0],Y);
         return dist1 < dist2 ;
     }
-    else if(ret==2) return true ;
+    else if(result==2) return true ;
     else return false ;
 }
 
 double convexHull(ll n)
 {
-    // Find the bottommost point
+
    ll ymin = a[0].y, miN = 0;
    for (ll i = 1; i < n; i++)
    {
      ll y = a[i].y;
 
-     // Pick the bottom-most or chose the left
-     // most point in case of tie
+
      if ((y < ymin) || (ymin == y && a[i].x < a[miN].x))
      {
          ymin = a[i].y;
@@ -76,8 +76,10 @@ double convexHull(ll n)
    }
 
         swap(a[0],a[miN]);
-        sort(&a[1],&a[n],cmp);
+        sort(&a[1],&a[n],cmp); // sort from 1 to n using cmp func
+
         S.push(a[0]);
+
 
        for(ll i=1;i<n;i++)
         {
@@ -85,30 +87,38 @@ double convexHull(ll n)
                 S.pop();
 
             S.push(a[i]);
+
+          // cout<<S.top().x<<" "<<S.top().y<<endl;
         }
 
-        ll cnt = 0 ;
+        vector<Point> v;
+       // v.push_back()
+        while(!S.empty())
+        {
+            v.push_back(S.top());
+            //cout<<"in stack "<<S.top().x<<" "<<S.top().y<<endl;
+           // cout<<v[0].x<<" "<<v[0].y<<endl;
+            S.pop();
+        }
 
-            while(!S.empty())
-            {
-                res[cnt++]=S.top() ;
-                S.pop();
-            }
-           vector < Point > V ;
-            for(ll i=cnt-1;i>=0;i--)
-                V.push_back(res[i]) ;
+        ll cnt = v.size();
+        if(cnt<3) return 0.0 ;
 
-            cnt = V.size() ;
-            if(cnt<3) return 0.0 ;
-            double ret = 1258.0 ;
+        v.insert(v.begin(),v[cnt-1]);
+        v.push_back(v[1]);
+        cnt = v.size();
 
-            for(ll i=0;i<cnt;i++)
-            {
-                ll j = (i+1)%cnt;
-                ll k = (i-1+cnt)%cnt;
-                ret = min(ret,(calc(V[i],V[j],V[k])*180)/PI);
-            }
-            return ret ; //BUJHINAI*/
+
+        double result = 9999;
+        for(ll i=cnt-2; i>0; i--)
+        {
+            ll j = i+1;
+            ll k = i-1;
+            result = min(result,(calc(v[i],v[j],v[k])*180)/PI);
+        }
+        return result;
+
+
 
 }
 
