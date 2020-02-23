@@ -23,7 +23,7 @@ int KMP(string pattern, int lps[])
             }
             else
             {
-                j = lps[lps[j-1]];
+                j = lps[j-1];
             }
         }
     }
